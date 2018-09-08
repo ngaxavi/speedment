@@ -2,7 +2,7 @@
 <!--
 
 
-    Copyright (c) 2006-2015, Speedment, Inc. All Rights Reserved.
+    Copyright (c) 2006-2016, Speedment, Inc. All Rights Reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License"); You may not
     use this file except in compliance with the License. You may obtain a copy of
@@ -18,47 +18,32 @@
 
 -->
 <actions>
-        <action>
-            <actionName>run</actionName>
-            <packagings>
-                <packaging>jar</packaging>
-            </packagings>
-            <goals>
-                <goal>process-classes</goal>
-                <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
-            </goals>
-            <properties>
-                <exec.args>-classpath %classpath com.speedment.internal.gui.MainApp</exec.args>
-                <exec.executable>java</exec.executable>
-            </properties>
-        </action>
-        <action>
-            <actionName>debug</actionName>
-            <packagings>
-                <packaging>jar</packaging>
-            </packagings>
-            <goals>
-                <goal>process-classes</goal>
-                <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
-            </goals>
-            <properties>
-                <exec.args>-Xdebug -Xrunjdwp:transport=dt_socket,server=n,address=${jpda.address} -classpath %classpath com.speedment.internal.gui.MainApp</exec.args>
-                <exec.executable>java</exec.executable>
-                <jpda.listen>true</jpda.listen>
-            </properties>
-        </action>
-        <action>
-            <actionName>profile</actionName>
-            <packagings>
-                <packaging>jar</packaging>
-            </packagings>
-            <goals>
-                <goal>process-classes</goal>
-                <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
-            </goals>
-            <properties>
-                <exec.args>-classpath %classpath com.speedment.internal.gui.MainApp</exec.args>
-                <exec.executable>java</exec.executable>
-            </properties>
-        </action>
-    </actions>
+    <!--    <action>
+        <actionName>CUSTOM-update-child-modules</actionName>
+        <displayName>Update Child Modules</displayName>
+        <goals>
+            <goal>org.codehaus.mojo:versions-maven-plugin:2.2:update-child-modules</goal>
+        </goals>
+    </action>-->
+    <action>
+        <actionName>CUSTOM-Deploy</actionName>
+        <displayName>Deploy</displayName>
+        <goals>
+            <goal>clean</goal>
+            <goal>deploy</goal>
+            <goal>-P</goal>
+            <goal>release</goal>
+        </goals>
+    </action>
+    <action>
+        <actionName>CUSTOM-Fast Build</actionName>
+        <displayName>Fast Build</displayName>
+        <goals>
+            <goal>clean</goal>
+            <goal>install</goal>
+            <goal>-Dmaven.compile.fork=true</goal>
+            <goal>-Dmaven.test.skip=true</goal>
+            <goal>-Denforcer.skip=true</goal>
+        </goals>
+    </action>
+</actions>

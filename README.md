@@ -1,164 +1,131 @@
-Wrap your database into Java 8!
-==========================================
+<img align="center" src="https://github.com/speedment/speedment-resources/blob/master/src/main/resources/wiki/frontpage/Duke-Spire.png?raw=true." alt="Spire the Hare" title="Spire" width="900px">
 
+Java Stream ORM
+====================================================
+
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.speedment/runtime/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.speedment/runtime)
+[![Javadocs](http://www.javadoc.io/badge/com.speedment/runtime-deploy.svg)](http://www.javadoc.io/doc/com.speedment/runtime-deploy)
+[![Build Status](https://travis-ci.org/speedment/speedment.svg?branch=develop-3.0)](https://travis-ci.org/speedment/speedment)
+[![Hex.pm](https://img.shields.io/hexpm/l/plug.svg?maxAge=2592000)](https://raw.githubusercontent.com/speedment/speedment/master/LICENSE)
 [![Join the chat at https://gitter.im/speedment/speedment](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/speedment/speedment?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-<p>
-<img src="https://raw.githubusercontent.com/speedment/speedment-resources/master/src/main/resources/logo/Speedhare_240x211.png" alt="Spire the Hare" title="Spire" align="right" /><span>Speedment accelerates your development speed and makes programming so easy and fun!</span>
+Speedment is an open source Java Stream ORM toolkit and runtime. The toolkit analyzes the metadata of an existing SQL database and automatically creates a Java representation of the data model. This powerful ORM enables you to create scalable and efficient Java applications using **standard Java** streams with no need to type SQL or use any new API. 
 
-When you use Speedment for database querying, you do not have to learn a new APIs or use complex ORMs. Everything is <strong>standard Java 8</strong> and works 
-out of the box!
-</p>
+Speedment was originally developed by researchers and engineers based in Palo Alto with the purpose to simplify and streamline the development of Java database applications by leveraging the Java Stream API. 
 
-This site covers the <strong>Speedment Open Source</strong> project available under the [Apache 2 license](http://www.apache.org/licenses/LICENSE-2.0). If you are interested in the enterprise product with support for commercial databases and in-memory acceleration, check out [www.speedment.com](http://speedment.com/)!
+Speedment is licensed under the business-friendly Apache 2 license. Contribution from users is encouraged. Please feel free to request new features, suggest improvements and file bug reports. Read more about contributing [here](https://github.com/speedment/speedment/blob/master/CONTRIBUTING.md). 
 
-Documentation
--------------
-You can read the [the API quick start here](https://github.com/speedment/speedment/wiki/Speedment-API-Quick-Start)!
+<img src="https://github.com/speedment/speedment-resources/blob/master/src/main/resources/wiki/frontpage/Spire-Quick-Start.png?raw=true" alt="Spire the Hare" title="Spire" align="right" width="20%" />
 
-Tutorials
----------
-* [Tutorial 1 - Get started with the GUI](https://github.com/speedment/speedment/wiki/Tutorial:-Get-started-with-the-GUI)
-* [Tutorial 2 - Hello Speedment](https://github.com/speedment/speedment/wiki/Tutorial:-Hello-Speedment)
-* [Tutorial 3 - Build a Social Network](https://github.com/speedment/speedment/wiki/Tutorial:-Build-a-Social-Network)
-* [Tutorial 4 - Log errors in a database](https://github.com/speedment/speedment/wiki/Tutorial:-Log-errors-in-a-database)
-* [Tutorial 5 - Using Speedment with Java EE](https://github.com/speedment/speedment/wiki/Tutorial:-Use-Speedment-with-Java-EE)
-* [Tutorial 6 - Writing your own extensions](https://github.com/speedment/speedment/wiki/Tutorial:-Writing-your-own-extensions)
+## Quick Start
 
-Examples
---------
-Here are a few examples of how you could use Speedment from your code:
+Assuming you have Maven installed and a relational database available, you can start using Speedment in a minute:
 
-###### Easy initialization
-A `HareApplication` class is generated from the database.
-```java
-Speedment speedment = new HareApplication().withPassword("myPwd729").build();
-Manager<Hare> hares = speedment.managerOf(Hare.class);
-```
+* [Start a New Speedment Maven Project](https://github.com/speedment/speedment/wiki/Start-a-New-Speedment-Maven-Project)
+* [Connect to Your Database](https://github.com/speedment/speedment/wiki/Connect-to-Your-Database)
 
-###### Optimised predicate short-circuit
-Search for Hares by a certain age:
+## Expressing SQL as Java Streams
+
+There is a remarkable resemblance between Java streams and SQL as summarized in the simplified table. This means there is no need for manually writing SQL-queries any more. You can remain in a pure Java world!
+
+<img align="left" src="https://github.com/speedment/speedment-resources/blob/master/src/main/resources/wiki/frontpage/SQL-Stream.png?raw=true." alt="Streams to SQL" width="400px">
+
+#### Example
+Search in a film database for a film with a length greater than 120 minutes:
 ```java
 // Searches are optimized in the background!
-Optional<Hare> harry = hares.stream()
-    .filter(NAME.equal("Harry").and(AGE.lessThan(5)))
+Optional<Film> longFilm = films.stream()
+    .filter(Film.LENGTH.greaterThan(120))
     .findAny();
-```
+``` 
 
 Results in the following SQL query:
 ```sql
-SELECT * FROM `Hare` 
-    WHERE `Hare`.`name` = "Harry"
-    AND `Hare`.`age` < 5
-    LIMIT 1;
+SELECT 
+    `film_id`,`title`,`description`,`release_year`,
+    `language_id`,`original_language_id`,`rental_duration`,`rental_rate`,
+    `length`,`replacement_cost`,`rating`,`special_features`,
+    `last_update` 
+FROM 
+     `sakila`.`film
+WHERE
+    (`length` > 120)
 ```
+<br>
 
-###### Easy persistence
-Entities can be persisted in a database using the "Active Record Pattern"
-```java
-Hare dbHarry = hares.newInstance()
-    .setName("Harry")
-    .setColor("Gray")
-    .setAge(3)
-    .persist();
-```
+## Features
+Speedment is equipped with the features listed below and more. 
 
-###### JPA-style persistance if you prefer that over the "Active Record Pattern".
-```java
-Hare harry = hares.newInstance()
-    .setName("Harry")
-    .setColor("Gray")
-    .setAge(3);
+### View Database Tables as Standard Java Streams
 
-Hare dbHarry = EntityManager.get(speedment).persist(harry);
-```
+<img src="https://github.com/speedment/speedment-resources/blob/master/src/main/resources/wiki/frontpage/stream-api.png?raw=true" alt="Stream API" title="Stream API" align="right" width="25%" />
 
-###### Entities are linked
-No need for complicated joins!
-```java
-Optional<Carrot> carrot = hares.stream()
-    .filter(NAME.equal("Harry"))
-    .flatMap(Hare::findCarrots) // Carrot is a foreign key table.
-    .findAny();
-```
+* **Pure Java** - Stream API instead of SQL eliminates the need of a query language<br>
+* **Dynamic Joins** - Ability to perform joins as Java streams on the application side<br>
+* **Parallel Streams** - Workload can automatically be divided over several threads<br>
+<br>
 
-###### Convert to JSON
-```java
-// List all hares in JSON format
-hares.stream()
-    .map(Hare::toJson)
-    .forEach(System.out::println);
-```
+### Short and Concise Type Safe Code 
 
-Features
---------
-Here are some of the many features packed into the Speedment framework!
+<img src="https://github.com/speedment/speedment-resources/blob/master/src/main/resources/wiki/frontpage/type-safety.png?raw=true" alt="Type Safety" title="Type Safety" align="right" width="25%" />
 
-### Database centric
-Speedment is using the database as the source-of-truth, both when it comes to the domain model and the actual data itself. Perfect if you are tired of configuring and debuging complex ORMs. After all, your data is more important than programming tools, is it not?
+* **Code Generation** - Automatic Java representation of the latest state of your database eliminates boilerplate code and the need of manually writing Java Entity classes while minimizing the risk for bugs.<br>
+* **Null Protection** - Minimizes the risk involved with database null values by wrapping to Java Optionals<br>
+* **Enum Integration** - Mapping of String columns to Java Enums increases memory efficiency and type safety<br>
 
-### Code generation
-Speedment inspects your database and can automatically generate code that reflects the latest state of your database. Nice if you have changed the data structure (like columns or tables) in your database. Optionally, you can change the way code is generated [using an intuitive GUI](https://github.com/speedment/speedment/wiki/Tutorial:-Get-started-with-the-GUI) or programatically using your own code.
+<img src="https://github.com/speedment/speedment-resources/blob/master/src/main/resources/wiki/frontpage/lazy-evaluation.png?raw=true" alt="Lazy Evaluation" title="Lazy Evaluation" align="right" width="25%" />
 
-### Modular Design
-Speedment is built with the ambition to be completely modular! If you don't like the current implementation of a certain function, plug in you own! Do you have a suggestion for an alternative way of solving a complex problem? Share it with the community!
+### Lazy Evaluation for Increased Performance
 
-### Type Safety
-When the database structure changes during development of a software there is always a risk that bugs sneak into the application. Thats why type-safety is such a big deal! With Speedment, you will notice if something is wrong seconds after you generate your code instead of weeks into the testing phase.
+* **Streams are Lazy** - Content from the database is pulled as elements are needed and consumed<br>
+* **Pipeline Introspection** - Optimized performance by short circuiting of stream operations<br>
 
-### Null Protection
-Ever seen a `NullPointerException` suddenly casted out of nowhere? Null-pointers have been called the billion-dollar-mistake of java, but at the same time they are used in almost every software project out there. To minimize the production risks of using null values, Speedment analyzes if null values are allowed by a column in the database and wraps the values as appropriate in Java 8 Optionals.
+## Tutorials
+The tutorials are divided into three sections. The basics are covered in the first section without any expected prior knowledge of Speedment. This builds a foundation of knowledge needed to fully benefit from the following tutorials.
 
+#### Basics
+* [Tutorial 1 - Hello Speedment](https://github.com/speedment/speedment/wiki/Tutorial:-Hello-Speedment)
+* [Tutorial 2 - A First Stream from Speedment](https://github.com/speedment/speedment/wiki/Tutorial:-A-First-Stream-from-Speedment)
 
-Using Maven
------------
-To use Speedment, just add the following lines (between the ... marker lines) to your project's `pom.xml` file.
-```xml
-<build>
-    <plugins>
-        ...
-        <plugin>
-            <groupId>com.speedment</groupId>
-            <artifactId>speedment-maven-plugin</artifactId>
-            <version>${speedment.version}</version>
-        </plugin>
-        ...
-    </plugins>
-</build>
-<dependencies>
-    ...
-    <dependency>
-        <groupId>com.speedment</groupId>
-        <artifactId>speedment</artifactId>
-        <version>${speedment.version}</version>
-    </dependency>
-    ...
-</dependencies>
-```
+#### Sample applications
+* [Tutorial 3 - Speedment Spring Boot Integration; REST assured - it is easy](https://github.com/speedment/speedment/wiki/Tutorial:-Speedment-Spring-Boot-Integration)
+* [Tutorial 4 - Speedment filters based on Json Web Tokens](https://github.com/speedment/speedment/wiki/Tutorial:-Speedment-Stream-Filters-Using-JWT-Data)
+* [Tutorial 5 - Build a Social Network](https://github.com/speedment/speedment/wiki/Tutorial:-Build-a-Social-Network)
+* [Tutorial 6 - Log errors in a database](https://github.com/speedment/speedment/wiki/Tutorial:-Log-errors-in-a-database)
+* [Tutorial 7 - Use Speedment with Java EE](https://github.com/speedment/speedment/wiki/Tutorial:-Use-Speedment-with-Java-EE)
+* [Tutorial 8 - Create Event Sourced Systems](https://github.com/speedment/speedment/wiki/Tutorial:-Create-an-Event-Sourced-System)
 
-Make sure that you use the latest `${speedment.version}` available.
+#### Extending Speedment
+* [Tutorial 9 - Writing your own extensions](https://github.com/speedment/speedment/wiki/Tutorial:-Writing-your-own-extensions)
+* [Tutorial 10 - Plug-in a Custom TypeMapper](https://github.com/speedment/speedment/wiki/Tutorial:-Plug-in-a-Custom-TypeMapper)
 
+## Resources 
+* **Documentation** - Read the [Speedment User Guide](https://speedment.github.io/speedment-doc/introduction.html).
+* **JavaDocs** - Latest [Speedment JavaDocs](http://www.javadoc.io/doc/com.speedment/runtime-deploy/3.1.0). 
+* **Examples** - There are 15 detailed examples [here](https://github.com/speedment/speedment/tree/master/example-parent) and more can be found in the User Guide provided above. 
+* **Gitter Chatroom** - Reach out to the Speedment developers and other community members via [the Gitter chatroom](https://gitter.im/speedment/speedment). 
+* **Creating a Pull Request** - Pull requests and improvement suggestions from the community are gladly accepted. Find more information [here](https://github.com/speedment/speedment/blob/master/CONTRIBUTING.md).
 
-### Requirements
-Speedment comes with support for the following databases out-of-the-box:
+## Requirements
+Speedment requires `Java 8` or later. Make sure your IDE is configured to use JDK 8 (version 1.8.0_40 or newer).
+
+Speedment Open Source comes with support for the following databases out-of-the-box:
 * MySQL
 * MariaDB
 * PostgreSQL
 
-As of version 2.0, Speedment requires `Java 8` or later. Make sure your IDE configured to use JDK 8.
+For Enterprise database connectors see [www.speedment.com](www.speedment.com/pricing). 
 
-License
--------
+## Licenses
+* **Speedment Open Source** - This site covers the Speedment Open Source project available under the 
+[Apache 2 license](http://www.apache.org/licenses/LICENSE-2.0). 
+* **Speedment Enterprise** - The enterprise product with support for commercial databases (i.e. Oracle, MS SQL Server, DB2, AS400) and in-JVM-memory acceleration can be found at [www.speedment.com](http://speedment.com/).
 
-Speedment is available under the [Apache 2 License](http://www.apache.org/licenses/LICENSE-2.0).
+## Copyright
 
-
-#### Copyright
-
-Copyright (c) 2015, Speedment, Inc. All Rights Reserved.
-
-Visit [www.speedment.org](http://www.speedment.org/) for more info.
+Copyright (c) 2014-2018, Speedment, Inc. All Rights Reserved.
+Visit [www.speedment.com](http://www.speedment.com/) for more info.
 
 [![Analytics](https://ga-beacon.appspot.com/UA-64937309-1/speedment/main)](https://github.com/igrigorik/ga-beacon)
 
-[![Beacon](http://stat.speedment.com:8081/Beacon?site=GitHub&path=main)](https://some-site.com)
+[Github activity visualized](https://www.youtube.com/watch?v=Rmc_3lLZQpM)

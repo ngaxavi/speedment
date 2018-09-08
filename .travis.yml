@@ -1,0 +1,24 @@
+language: java
+
+jdk:
+  - oraclejdk8
+  - oraclejdk9
+  - oraclejdk10
+
+addons:
+  apt:
+    packages:
+      - oracle-java8-installer
+      - oracle-java9-installer
+      #- oracle-java10-installer
+      
+dist: trusty
+sudo: false
+      
+notifications:
+  email:
+    recipients:
+      - dev@speedment.com
+    on_success: never  # default: change
+    on_failure: always # default: always
+
